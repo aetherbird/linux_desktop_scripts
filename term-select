@@ -1,2 +1,2 @@
 #!/bin/bash
-wmctrl -i -a $(wmctrl -l | grep "0\ $(hostname)\ Terminal\ " | awk '{print $1}' | head -1)
+wmctrl -i -a $(wmctrl -l | grep "0\ $(hostname)\ - Terminal\ " | awk '{print $1}' | head -1)
