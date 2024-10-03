@@ -1,2 +1,1 @@
-#!/bin/bash
-wmctrl -i -a $(wmctrl -l | grep "Brave$" | awk '{print $1}' | tail -1)
+browser-select

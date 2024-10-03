@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Set the current project directory (default to your preferred project directory)
+CURRENT_PROJECT="${1:-/jjbasket/projects/realm_defense}"
+
+# Set the output directory for the zipped file
+DEST_DIR="/jjbasket/godot-context"
+
+# Get the project name and current date for the zip file
+PROJECT_NAME=$(basename "$CURRENT_PROJECT")
+CURRENT_DATE=$(date +"%Y%m%d_%H%M%S")
+ZIP_FILE="$DEST_DIR/${PROJECT_NAME}_${CURRENT_DATE}.zip"
+
+# Create a temporary directory for the files to be zipped
+TEMP_DIR=$(mktemp -d)
+
+# Create the base project directory in the temporary directory
+mkdir -p "$TEMP_DIR/$PROJECT_NAME"
+
+# Explanation:
+# -name "*.cfg": This line was added to ensure that all .cfg files are included,
+# not just project.godot.
+# This aligns with the explanation that some .cfg files might store critical information
+# and should not be missed.
+# add --include '*.cfg' \ to include config files
+
+# Copy relevant files while preserving the directory structure
+rsync -avP --include '*/' \
+      --include '*.gd' \
+      --include '*.tscn' \
+      --include '*.tres' \
+      --include '*.shader' \
+      --include 'project.godot' \
+      --include '*.json' \
+      --include '*.txt' \
+      --include '*.ini' \
+      --include '*.cfg' \
+      --exclude '*' \
+      "$CURRENT_PROJECT/" "$TEMP_DIR/$PROJECT_NAME"
+
+# Move to the temporary directory and zip with the base directory name included
+(cd "$TEMP_DIR" && zip -r "$ZIP_FILE" "$PROJECT_NAME")
+
+# Clean up the temporary directory
+rm -rf "$TEMP_DIR"
+
+# Print the location of the zip file
+echo "Project files zipped and saved to $ZIP_FILE"
+

@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+cd /jjbasket/projects
+/opt/godot/Godot_v4.2.2-stable_linux.x86_64 & /opt/kanban/kanri_0.7.1_amd64.AppImage
